@@ -15,7 +15,7 @@ export default function App() {
   const [isPending, setIsPending] = useState(false);
   const [modalAlt, setModalAlt] = useState("");
   const [modalImg, setModalImg] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState({ isModalOpen: false });
   const [images, setImages] = useState([]);
 
   const handleSetQuery = (e) => {
@@ -36,15 +36,15 @@ export default function App() {
               hideProgressBar: true,
             });
             setImages([]);
+
             return;
           }
-          setImages(img);
+          setImages((prev) => [...prev, ...img]);
           setIsPending(false);
         })
         .catch((error) => {
           console.log(error.massage);
-        })
-        .finally(() => setIsPending(false));
+        });
     }
   }, [isPending, page, query]);
 
@@ -56,13 +56,20 @@ export default function App() {
         hideProgressBar: true,
       });
     }
-    setImages([]);
+    setImages((prev) => prev);
     setPage(1);
     setIsPending(true);
   };
+  const handleTogleModal = (image, alt) => {
+    setIsModalOpen((prev) => ({
+      isModalOpen: !prev.isModalOpen,
 
-  const handleTogleModal = () => {
-    setModalAlt((prev) => !prev);
+      modalImg: image,
+      modalAlt: alt,
+    }));
+    setModalAlt(alt);
+    setModalImg(image);
+    setPage((prevPage) => prevPage + 1);
   };
 
   const handleLoadMore = () => {
@@ -84,11 +91,11 @@ export default function App() {
         <Hearts ariaLabel="loading" color="red" height={150} width={150} />
       )}
       {images.length >= 12 && <Button handleLoadMore={handleLoadMore} />}
-      {isModalOpen && (
+      {isModalOpen.isModalOpen && (
         <Modal
           modalImg={modalImg}
           handleTogleModal={handleTogleModal}
-          tag={modalAlt}
+          tags={modalAlt}
         />
       )}
       <ToastContainer autoClose={3000} />
