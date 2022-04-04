@@ -36,6 +36,7 @@ export default function App() {
               hideProgressBar: true,
             });
             setImages([]);
+            setIsPending(false);
 
             return;
           }
