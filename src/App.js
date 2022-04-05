@@ -88,10 +88,10 @@ export default function App() {
       {images.length >= 1 && (
         <ImageGallery handleTogleModal={handleTogleModal} images={images} />
       )}
-      {isPending && (
+      {isPending && images.length > 0 && (
         <Hearts ariaLabel="loading" color="red" height={150} width={150} />
       )}
-      {images.length >= 12 && <Button handleLoadMore={handleLoadMore} />}
+      {images.length > 0 && <Button handleLoadMore={handleLoadMore} />}
       {isModalOpen.isModalOpen && (
         <Modal
           modalImg={modalImg}
